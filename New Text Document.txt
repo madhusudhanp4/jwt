@@ -1,0 +1,98 @@
+package com.doconnectai.controller;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.doconnectai.service.AIClientService;
+
+@RestController
+@RequestMapping("/ai")
+@CrossOrigin
+public class AiController {
+
+	@Autowired
+	private AIClientService aiClientService;
+
+	@PostMapping("/generate")
+	public String generateAnswer(@RequestBody Map<String, String> request) {
+
+		return aiClientService.getAIResponse(request.get("title"), request.get("description"));
+	}
+
+	
+	
+	
+	
+	
+	
+	
+	/*
+	 * @Autowired private GeminiService geminiService;
+	 * 
+	 * @PostMapping("/answer") public String getAnswer(@RequestBody QuestionDto dto)
+	 * throws Exception{
+	 * 
+	 * return geminiService.generateAnswer(dto); }
+	 */
+
+}
+
+
+
+
+
+
+
+
+
+
+
+package com.doconnectai.service;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+@Service
+public class AIClientService {
+
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    public String getAIResponse(String title, String description) {
+
+        String url = "http://localhost:8081/ai/generate";
+
+        Map<String, String> request = new HashMap<>();
+        request.put("title", title);
+        request.put("description", description);
+
+        ResponseEntity<String> response =
+                restTemplate.postForEntity(url, request, String.class);
+
+        return response.getBody();
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
